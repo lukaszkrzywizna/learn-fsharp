@@ -2,4 +2,5 @@
 
 // Record
 type Money =
-    // ???
+    { Amount: decimal
+      Currency: Currency }
