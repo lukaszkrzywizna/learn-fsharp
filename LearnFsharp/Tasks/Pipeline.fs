@@ -17,21 +17,72 @@
 
 // a) logger 
 let logger operation arg =
-    failwith "not implemented"
+    printfn $"arg: {arg}"
+    let result = operation arg
+    printfn $"result: {result}"
+    result
 
 // b) metrics
 let metrics operation arg =
-    failwith "not implemented"
+    let sw = System.Diagnostics.Stopwatch.StartNew()
+    let result = operation arg
+    printfn $"execution time: {sw.ElapsedTicks}"
+    result
     
-// c) retrying if fail
+// c) retrying if fail 
 let retryWhenFail operation arg =
-    failwith "not implemented"
+    let rec retry counter =
+        match counter with
+        | 5 -> operation arg
+        | _ ->
+            try
+                operation arg
+            with
+            | ex ->
+                printfn $"failed retry number: {counter}"
+                retry (counter + 1)
+    retry 0
 
 // now, create a whole pipeline
 let decorated operation arg =
-    failwith "not implemented"
+    let decorators = [retryWhenFail; logger; metrics] |> List.reduce (>>)
+    let handle = operation |> decorators
+    arg |> handle
 
 // * extra - extend retryWithFail to accept counter value as a argument 
 // ** extra - remove dependency for printfn and make it parametrized
 
 // code new variants below:
+
+// a) logger 
+let extraLogger log operation arg =
+    log $"arg: {arg}"
+    let result = operation arg
+    log $"result: {result}"
+    result
+
+// b) metrics
+let extraMetrics log operation arg =
+    let sw = System.Diagnostics.Stopwatch.StartNew()
+    let result = operation arg
+    log $"execution time: {sw.ElapsedTicks}"
+    result
+    
+// c) retrying if fail 
+let extraRetryWhenFail log counter operation arg =
+    let rec retry rest =
+        match rest with
+        | _ when rest = counter -> operation arg
+        | _ ->
+            try
+                operation arg
+            with
+            | ex ->
+                log $"failed retry number: {rest}"
+                retry (rest + 1)
+    retry 0
+
+let extraDecorated log operation arg =
+    let decorators = (extraRetryWhenFail log 10) >> (extraLogger log) >> (extraMetrics log)
+    let handle = operation |> decorators
+    arg |> handle
