@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Compile Include="Lesson.fs" />
+    <Compile Include="Tasks\Scrabble.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
