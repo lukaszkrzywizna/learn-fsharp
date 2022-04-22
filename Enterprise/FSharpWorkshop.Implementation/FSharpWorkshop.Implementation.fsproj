@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="DiscriminatedUnion.fs" />
+    <Compile Include="ActivePatterns.fs" />
+    <Compile Include="Finances\Currency.fs" />
+    <Compile Include="Finances\Money.fs" />
+    <Compile Include="Finances\Balance.fs" />
+    <Compile Include="Finances\Operators.fs" />
+    <Compile Include="Finances\Parsing.fs" />
+  </ItemGroup>
+
+</Project>
