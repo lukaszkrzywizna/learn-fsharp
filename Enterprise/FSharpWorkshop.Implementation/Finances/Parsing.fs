@@ -12,16 +12,54 @@ let CurrencyRegexPattern = "(?<currency>[a-zA-Z]{3,4})"
 let MoneyRegexPattern = "(?<amount>-?\d+(,\d+)?)\s(?<currency>[a-zA-Z]{3,4})"
 
 let tryParseDecimal (provider: IFormatProvider) (str: string): decimal option =
-    failwith "not implemented"
+    match Decimal.TryParse(str, NumberStyles.Number, provider) with
+    | true, value -> Some value
+    | false, _ -> None
 
 let tryParseKnownCurrency (code: string): Currency option =
-    failwith "not implemented"
+    match code with
+    | "USD" -> Some USD
+    | "PLN" -> Some PLN
+    | "EUR" -> Some EUR
+    | "GBP" -> Some GBP
+    | _ -> None
     
 let tryParseCurrency (str: string): Currency option =
-    failwith "not implemented"
+    let _optionToResult fNone = function
+        | Some value -> Ok value
+        | None -> Error (fNone())
+    let _resultToOption = function
+        | Ok value -> Some value
+        | Error _ -> None
+    let result =
+        match str with
+        | null | "" -> None
+        | TryRegexMatch CurrencyRegexPattern regexResults ->
+            regexResults
+            |> Map.tryFind "currency"
+            |> Option.bind (fun code ->
+                code
+                |> tryParseKnownCurrency
+                |> Option.orElseWith (fun () -> Some (OtherCurrency code)))
+        | _ -> None
+    result
     
 let tryParseMoney (provider: IFormatProvider) (str: string): Money option =
-    failwith "not implemented"
+    match str with
+    | null | "" -> None
+    | TryRegexMatch MoneyRegexPattern matches ->
+        let amountResult =
+            matches
+            |> Map.tryFind "amount"
+            |> Option.bind (tryParseDecimal provider)
+        let currencyResult =
+            matches
+            |> Map.tryFind "currency"
+            |> Option.bind tryParseCurrency
+        match amountResult, currencyResult with
+        | Some amount, Some currency -> Some { Amount = amount; Currency = currency }
+        | _ -> None
+    | _ -> None
 
 let parseDecimal (provider: IFormatProvider) (str: string): Result<decimal, string> =
     failwith "not implemented"
