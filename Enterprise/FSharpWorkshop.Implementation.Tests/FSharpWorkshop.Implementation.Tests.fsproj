@@ -14,9 +14,6 @@
     <Compile Include="TryParseDecimalTests.fs" />
     <Compile Include="TryParseMoneyTests.fs" />
     <Compile Include="OperatorsTests.fs" />
-    <Compile Include="ParseCurrencyTests.fs" />
-    <Compile Include="ParseDecimalTests.fs" />
-    <Compile Include="ParseMoneyTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
