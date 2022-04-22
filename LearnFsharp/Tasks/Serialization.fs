@@ -15,10 +15,21 @@ open Xunit
         4. serialize whole point
     HINT: for serialization/deserialization use JsonConvert.SerializeObject and JsonConvert.DeserializeObject<'t>
  *)
- 
+
+type Point =
+    { X: int; Y: int }
+    static member (+) (p1, p2) =
+        {X = p1.X + p2.X; Y = p1.Y + p2.Y}
+        
+// or instead of operator:
+let add p1 p2 =
+    {X = p1.X + p2.X; Y = p1.Y + p2.Y}
+
 let (?+?) a b =
-    failwith "not implemented"
-    
+    let desA = JsonConvert.DeserializeObject<Point> a
+    let desB = JsonConvert.DeserializeObject<Point> b
+    desA + desB |> JsonConvert.SerializeObject
+
 open FsUnit.Xunit
 [<Fact>]
 let ``I add two serialized points and I get serialized sum of their fields``() =
