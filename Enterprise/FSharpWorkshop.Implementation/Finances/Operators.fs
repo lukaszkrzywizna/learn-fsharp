@@ -3,13 +3,27 @@
 module Operators =
 
     let (+!) (x: Money) (y: Money): Money =
-        failwith "not implemented"
+        if x.Currency = y.Currency
+        then
+            { Amount = x.Amount + y.Amount
+              Currency = x.Currency }
+        else failwith "Different currencies"
 
     let (+?) (x: Money) (y: Money): Money option =
-        failwith "not implemented"
+        if x.Currency = y.Currency
+        then
+            { Amount = x.Amount + y.Amount
+              Currency = x.Currency }
+            |> Some
+        else None
 
     let (+?!) (x: Money) (y: Money): Result<Money, string> =
-        failwith "not implemented"
+        if x.Currency = y.Currency
+        then
+            { Amount = x.Amount + y.Amount
+              Currency = x.Currency }
+            |> Ok
+        else Error "Different currencies"
     
     let (+++) (balance: Balance) (value: Money): Balance =
-        failwith "not implemented"
+        balance.add value
