@@ -9,10 +9,20 @@ open Microsoft.FSharp.Collections
  *)
 
 let scrabbleLetterScore str =
-    failwith "not implemented"
+    match str with
+    |"A"|"E"|"I"|"O"|"U"|"L"|"N"|"R"|"S"|"T" -> 1
+    |"D"|"G" -> 2
+    |"B"|"C"|"M"|"P" -> 3
+    |"F"|"H"|"V"|"W"|"Y" -> 4
+    |"K" -> 5
+    |"J"|"X" -> 8
+    |"Q"|"Z" -> 10
+    | _ -> 0
 
 let scrabbleWholeWord (str: string) =
-    failwith "not implemented"
+    Seq.init str.Length (fun x -> str[x].ToString().ToUpper())
+    |> Seq.map scrabbleLetterScore
+    |> Seq.sum
 
 (* 
     EXTRA TASK: Extend scoring function to accept custom scoring
@@ -20,15 +30,42 @@ let scrabbleWholeWord (str: string) =
     Question: How unrecognized value should be handled?
  *)
  
+type ScoreLevel =
+    | Lowest
+    | Lower
+    | Low
+    | Medium
+    | High
+    | Higher
+    | Highest
     
 let scrabbleLetterScoreCustom str =
-    failwith "not implemented"
+    match str with
+    |"A"|"E"|"I"|"O"|"U"|"L"|"N"|"R"|"S"|"T" -> Some Lowest
+    |"D"|"G" -> Some Lower
+    |"B"|"C"|"M"|"P" -> Some Low
+    |"F"|"H"|"V"|"W"|"Y" -> Some Medium
+    |"K" -> Some High
+    |"J"|"X" -> Some Higher
+    |"Q"|"Z" -> Some Highest
+    | _ -> None
 
-let myScore level =
-    failwith "not implemented"
+let myScore (level: ScoreLevel) =
+    match level with
+    | Lowest -> 10
+    | Lower -> 100
+    | Low -> 1000
+    | Medium -> 1500
+    | High -> 2500
+    | Higher -> 5000
+    | Highest -> 100000
 
 let scrabbleWholeWordCustom customScore (str: string) =
-    failwith "not implemented"
+    Seq.init str.Length (fun x -> str[x].ToString().ToUpper())
+    |> Seq.map scrabbleLetterScoreCustom
+    |> Seq.map (Option.map customScore)
+    |> Seq.map (Option.defaultValue 0)
+    |> Seq.sum
 
 open Xunit
 open FsUnit.Xunit
