@@ -236,8 +236,10 @@ let takenAll = takenXAndY 6
 
 // it's often used for "functional dependency injection"
 
+type GenerateCode = string -> string        // this is a type alias. helps make function definitions more readable
+
 let createReservation                       // ORDER MATTERS - final input must be last
-    codeGen                                 // [dependency] this is code generation function
+    (codeGen: GenerateCode)                 // [dependency] this is code generation function
     resExists                               // [dependency] check in db if reservation with same id exists
     id                                      // [input]      final id parameter taken from an user
     =
