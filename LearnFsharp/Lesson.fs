@@ -53,7 +53,7 @@ let printIfEven x =
     
     let result =                            // more explicit way
         if x % 2 = 0
-        then printf "it's event"
+        then printf "it's even"
         else ()
     result
 
